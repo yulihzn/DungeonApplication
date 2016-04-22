@@ -10,11 +10,12 @@
     tools:showIn="@layout/activity_main">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="@null"
+        android:scaleType="centerCrop"
         android:src="@mipmap/start_bg" />
 
     <TextView

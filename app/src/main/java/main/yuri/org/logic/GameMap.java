@@ -41,7 +41,6 @@ public class GameMap {
 				gameGridModel.setColumn(i);
 				gameGridModel.setRow(j);
 				if(gameGridModel.getType() == 1){
-					gameGridModel.setMsg("陷阱");
 				}
 				list.add(gameGridModel);
 			}

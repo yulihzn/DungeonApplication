@@ -2,6 +2,7 @@ package main.yuri.org.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,7 +14,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,10 +28,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import main.yuri.org.Factory.ActorModelFactory;
+import main.yuri.org.Factory.ItemModelFactory;
 import main.yuri.org.adapter.GameRecyclerViewAdapter;
 import main.yuri.org.dungeonlord.R;
 import main.yuri.org.logic.GameMap;
+import main.yuri.org.model.ActorModel;
 import main.yuri.org.model.GameGridModel;
+import main.yuri.org.model.ItemModel;
 import main.yuri.org.view.CustomToast;
 
 public class GameActivity extends AppCompatActivity {
@@ -71,8 +75,27 @@ public class GameActivity extends AppCompatActivity {
 		});
 	}
 	private void loadData(int level) {
+		Random random = new Random();
+		random.setSeed(System.currentTimeMillis());
 		datas.clear();
-		datas = new GameMap(level).getList();
+		for(int i = 0;i < 9;i++){
+			GameGridModel gameGridModel = new GameGridModel();
+			gameGridModel.setType(random.nextInt(3));
+			gameGridModel.setIndex(i);
+			switch (gameGridModel.getType()){
+				case 1:
+					gameGridModel.setActorModel(ActorModelFactory.getInstance().getA());
+					break;
+				case 2:
+					gameGridModel.setItemModel(ItemModelFactory.getInstance().getHAD());
+					break;
+			}
+			if(i == 4){
+				gameGridModel.setType(1);
+				gameGridModel.setActorModel(ActorModelFactory.getInstance().getI());
+			}
+			datas.add(gameGridModel);
+		}
 		adapter.setData(datas);
 		adapter.notifyDataSetChanged();
 	}
@@ -86,12 +109,10 @@ public class GameActivity extends AppCompatActivity {
 
 			@Override
 			public void onDrawerOpened(View drawerView) {
-				Snackbar.make(drawerView,"onDrawerOpened",Snackbar.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onDrawerClosed(View drawerView) {
-				Snackbar.make(drawerView,"onDrawerClosed",Snackbar.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -126,31 +147,28 @@ public class GameActivity extends AppCompatActivity {
 			Paint paint = new Paint();
 			@Override
 			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-				// TODO Auto-generated method stub
 				super.getItemOffsets(outRect, view, parent, state);
 			}
-
 			@Override
 			public void onDraw(Canvas c, RecyclerView parent, State state) {
 				super.onDraw(c, parent, state);
 			}
-
 			@Override
 			public void onDrawOver(Canvas c, RecyclerView parent, State state) {
 				super.onDrawOver(c, parent, state);
-				 paint.setColor(Color.GRAY);
-				 paint.setStrokeWidth(10);
-//	                for (int i = 0, size = parent.getChildCount(); i < size; i++) {
-//	                    View child = parent.getChildAt(i);
-//	                    c.drawLine(child.getLeft(), child.getBottom(),
-//	                            child.getRight(), child.getBottom(), paint);
-//	                    c.drawLine(child.getLeft(), child.getTop(),
-//	                    		child.getRight(), child.getTop(), paint);
-//	                    c.drawLine(child.getRight(), child.getBottom(),
-//	                    		child.getRight(), child.getTop(), paint);
-//	                    c.drawLine(child.getLeft(), child.getBottom(),
-//	                    		child.getLeft(), child.getTop(), paint);
-//	                }
+				 paint.setColor(Color.WHITE);
+				 paint.setStrokeWidth(1);
+	                for (int i = 0, size = parent.getChildCount(); i < size; i++) {
+	                    View child = parent.getChildAt(i);
+	                    c.drawLine(child.getLeft(), child.getBottom(),
+	                            child.getRight(), child.getBottom(), paint);
+	                    c.drawLine(child.getLeft(), child.getTop(),
+	                    		child.getRight(), child.getTop(), paint);
+	                    c.drawLine(child.getRight(), child.getBottom(),
+	                    		child.getRight(), child.getTop(), paint);
+	                    c.drawLine(child.getLeft(), child.getBottom(),
+	                    		child.getLeft(), child.getTop(), paint);
+	                }
 			}
 
 		});
@@ -163,22 +181,7 @@ public class GameActivity extends AppCompatActivity {
 			public void onItemClick(View view, int position) {
 				CustomToast.showToast(getApplicationContext(), count+++"点！", Toast.LENGTH_LONG);
 				Snackbar.make(getCurrentFocus(),count+"点！",Snackbar.LENGTH_SHORT).show();
-				if(isBlockCanClick(position)){
-					datas.get(position).setActive(true);
-					int status = checkStatus(position);
-					switch (status) {
-					case STATUS_ING:
-						CustomToast.showToast(getApplicationContext(), "这一片很安全", Toast.LENGTH_LONG);
-						break;
-					case STATUS_FAILED:
-						showEndDialog(status);
-						break;
-					case STATUS_SUCCESS:
-						showEndDialog(status);
-						break;
-					}
-				}
-				adapter.notifyDataSetChanged();
+				adapter.notifyItemChanged(position);
 
 			}
 		});
@@ -225,67 +228,7 @@ public class GameActivity extends AppCompatActivity {
 			}
 		};
 		counter.start();
-//		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-//		dialog.setCancelable(false);
-//		dialog.setTitle(title);
-//		dialog.setMessage(msg);
-//		dialog.setPositiveButton(ok, new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				
-//				if(status == STATUS_FAILED){
-//					level = 1;
-//					tv_level.setText("level"+level);
-//					loadData(level);
-//				}else if(status == STATUS_SUCCESS){
-//					if(level++>= 4){
-//						level = 4;
-//					}
-//					tv_level.setText("level"+level);
-//					loadData(level);
-//				}
-//			}
-//		});
-//		dialog.create().show();
 
-	}
-	private int checkStatus(int position) {
-		int a = datas.size();
-		int m = COLUMN;
-		if(datas.get(position).getType() == 1){
-			return STATUS_FAILED;
-		}
-		for (int i = 0; i < datas.size(); i++) {
-			if(datas.get(i).isActive()){
-				a = i;
-				if(a-a%m<=0){
-					return STATUS_SUCCESS;
-				}
-			}
-		}
-		return STATUS_ING;
-
-	}
-	private boolean isBlockCanClick(int position){
-		//012,345,678
-		int a = datas.size();
-		int m = COLUMN;
-		for (int i = 0; i < datas.size(); i++) {
-			if(datas.get(i).isActive()){
-				a = i;
-				if(a-a%m>position&&position>=a-a%m-m){
-					return true;
-				}else{
-					return false;
-				}
-			}
-		}
-		if(a-a%m>position&&position>=a-a%m-m){
-			return true;
-		}else{
-			return false;
-		}
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
