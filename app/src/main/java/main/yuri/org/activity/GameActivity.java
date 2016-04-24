@@ -25,22 +25,27 @@ import android.support.v7.widget.RecyclerView.State;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import main.yuri.org.Factory.ActorModelFactory;
 import main.yuri.org.Factory.ItemModelFactory;
 import main.yuri.org.adapter.GameRecyclerViewAdapter;
+import main.yuri.org.adapter.MsgRecyclerViewAdapter;
 import main.yuri.org.dungeonlord.R;
 import main.yuri.org.logic.GameMap;
 import main.yuri.org.model.ActorModel;
 import main.yuri.org.model.GameGridModel;
 import main.yuri.org.model.ItemModel;
+import main.yuri.org.model.MsgModel;
 import main.yuri.org.view.CustomToast;
 
 public class GameActivity extends AppCompatActivity {
 	private TextView tv_level;
 	private GameRecyclerViewAdapter adapter;
+	private MsgRecyclerViewAdapter adapter_msg;
+	private List<MsgModel> list_msg = new ArrayList<MsgModel>();
 	private List<GameGridModel> datas = new ArrayList<GameGridModel>();
 	private static final int STATUS_FAILED = 100;
 	private static final int STATUS_SUCCESS = 101;
@@ -50,6 +55,8 @@ public class GameActivity extends AppCompatActivity {
 
 	private Toolbar mToolbar;
 	private RecyclerView mRcv;
+	private RecyclerView rv_msg;
+	private FrameLayout fl_msg;
 
 	private DrawerLayout mDrawerLayout;
 	private NavigationView mNavigationView;
@@ -100,6 +107,7 @@ public class GameActivity extends AppCompatActivity {
 		adapter.notifyDataSetChanged();
 	}
 	private void initView() {
+		initMsgLayout();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
 			@Override
@@ -130,18 +138,13 @@ public class GameActivity extends AppCompatActivity {
 			}
 		});
 		initToolBar();
+		initMsgBoard();
 		adapter = new GameRecyclerViewAdapter(this);
 		adapter.setData(datas);
 		mRcv = (RecyclerView) findViewById(R.id.rcv_test);
-		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
 		StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//		DisplayMetrics dm = new DisplayMetrics();
-//		getWindowManager().getDefaultDisplay()
-//				.getMetrics(dm);
-//		gridLayoutManager.setMeasuredDimension(dm.widthPixels, dm.widthPixels);
 		mRcv.setLayoutManager(gridLayoutManager);
-		mRcv.setHasFixedSize(true);
 		mRcv.setItemAnimator(new DefaultItemAnimator());
 		mRcv.addItemDecoration(new ItemDecoration() {
 			Paint paint = new Paint();
@@ -160,14 +163,14 @@ public class GameActivity extends AppCompatActivity {
 				 paint.setStrokeWidth(1);
 	                for (int i = 0, size = parent.getChildCount(); i < size; i++) {
 	                    View child = parent.getChildAt(i);
-	                    c.drawLine(child.getLeft(), child.getBottom(),
-	                            child.getRight(), child.getBottom(), paint);
-	                    c.drawLine(child.getLeft(), child.getTop(),
-	                    		child.getRight(), child.getTop(), paint);
-	                    c.drawLine(child.getRight(), child.getBottom(),
-	                    		child.getRight(), child.getTop(), paint);
-	                    c.drawLine(child.getLeft(), child.getBottom(),
-	                    		child.getLeft(), child.getTop(), paint);
+//	                    c.drawLine(child.getLeft(), child.getBottom(),
+//	                            child.getRight(), child.getBottom(), paint);
+//	                    c.drawLine(child.getLeft(), child.getTop(),
+//	                    		child.getRight(), child.getTop(), paint);
+//	                    c.drawLine(child.getRight(), child.getBottom(),
+//	                    		child.getRight(), child.getTop(), paint);
+//	                    c.drawLine(child.getLeft(), child.getBottom(),
+//	                    		child.getLeft(), child.getTop(), paint);
 	                }
 			}
 
@@ -179,13 +182,64 @@ public class GameActivity extends AppCompatActivity {
 			private int count = 0;
 			@Override
 			public void onItemClick(View view, int position) {
-				CustomToast.showToast(getApplicationContext(), count+++"点！", Toast.LENGTH_LONG);
-				Snackbar.make(getCurrentFocus(),count+"点！",Snackbar.LENGTH_SHORT).show();
+				addMsg(count+++"点！");
 				adapter.notifyItemChanged(position);
 
 			}
 		});
+
 	}
+
+	private void initMsgLayout() {
+		fl_msg = (FrameLayout)findViewById(R.id.fl_msg);
+
+	}
+
+	/**消息栏初始化**/
+	private void initMsgBoard() {
+		adapter_msg = new MsgRecyclerViewAdapter(this);
+		adapter_msg.setList(list_msg);
+		rv_msg = (RecyclerView) findViewById(R.id.rcv_msg);
+		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		rv_msg.setLayoutManager(layoutManager);
+		rv_msg.setHasFixedSize(true);
+		rv_msg.setItemAnimator(new DefaultItemAnimator());
+		rv_msg.addItemDecoration(new ItemDecoration() {
+			Paint paint = new Paint();
+			@Override
+			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
+				super.getItemOffsets(outRect, view, parent, state);
+			}
+			@Override
+			public void onDraw(Canvas c, RecyclerView parent, State state) {
+				super.onDraw(c, parent, state);
+			}
+			@Override
+			public void onDrawOver(Canvas c, RecyclerView parent, State state) {
+				super.onDrawOver(c, parent, state);
+//				paint.setColor(Color.WHITE);
+//				paint.setStrokeWidth(1);
+//				for (int i = 0, size = parent.getChildCount(); i < size; i++) {
+//					View child = parent.getChildAt(i);
+//					c.drawLine(child.getLeft(), child.getBottom(),
+//							child.getRight(), child.getBottom(), paint);
+//				}
+			}
+
+		});
+		rv_msg.setAdapter(adapter_msg);
+
+	}
+
+	private void addMsg(String msg){
+		adapter_msg.addData(0,new MsgModel(msg));
+		rv_msg.scrollToPosition(0);
+		CustomToast.showToast(getApplicationContext(),msg, Toast.LENGTH_LONG);
+		Snackbar.make(getCurrentFocus(),msg,Snackbar.LENGTH_SHORT).show();
+	}
+
+
 	protected void showEndDialog(final int status) {
 		mRcv.setEnabled(false);
 		String msg = "";

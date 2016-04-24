@@ -7,18 +7,15 @@ import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.animation.AnimationSet;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +34,18 @@ public class GameRecyclerViewAdapter extends RecyclerView.Adapter<GameRecyclerVi
 		super();
 		this.context = context;
 	}
+	private ObjectAnimator oa;
+	private void startAnimator(View view){
+		PropertyValuesHolder a1 = PropertyValuesHolder.ofFloat("alpha",0.7f,0f);
+		PropertyValuesHolder a2 = PropertyValuesHolder.ofFloat("scaleX",0.9f,1f);
+		PropertyValuesHolder a3 = PropertyValuesHolder.ofFloat("scaleY",0.9f,1f);
+		PropertyValuesHolder p1 = PropertyValuesHolder.ofFloat("alpha",0.5f,0f);
+		oa = ObjectAnimator.ofPropertyValuesHolder(view,a1,a2,a3);
+		oa.setDuration(500);
+		view.setBackgroundColor(Color.WHITE);
+		oa.start();
+	}
+
 
 	@Override
 	public int getItemCount() {
@@ -86,6 +95,7 @@ public class GameRecyclerViewAdapter extends RecyclerView.Adapter<GameRecyclerVi
 			@Override
 			public void onClick(View v) {
 				if(onItemClickListener != null){
+					startAnimator(arg0.tv_msg);
 					onItemClickListener.onItemClick(v, arg1);
 
 				}
@@ -93,34 +103,60 @@ public class GameRecyclerViewAdapter extends RecyclerView.Adapter<GameRecyclerVi
 			}
 		});
 		arg0.itemView.setOnTouchListener(new ItemTouchListener(arg0));
+		arg0.itemView.setOnKeyListener(new ItemKeyListener(arg0));
 	}
+
 	class ItemTouchListener implements View.OnTouchListener{
-		ObjectAnimator oa;
-		ObjectAnimator ob;
-		ObjectAnimator oc;
 		ViewHolder viewHolder;
 		public ItemTouchListener(ViewHolder viewHolder) {
 			this.viewHolder = viewHolder;
-			viewHolder.tv_msg.setText("");
-			PropertyValuesHolder a1 = PropertyValuesHolder.ofFloat("alpha",0.5f,0f);
-			PropertyValuesHolder a2 = PropertyValuesHolder.ofFloat("scaleX",0.3f,1f);
-			PropertyValuesHolder a3 = PropertyValuesHolder.ofFloat("scaleY",0.3f,1f);
-			oa = ObjectAnimator.ofPropertyValuesHolder(viewHolder.tv_msg,a1,a2,a3);
-			PropertyValuesHolder p1 = PropertyValuesHolder.ofFloat("alpha",0.5f,0f);
-			oa.setDuration(1000);
 		}
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 
 			switch (event.getAction()){
-				case MotionEvent.ACTION_UP:
-					if(oa != null&&!oa.isRunning()){
-						viewHolder.tv_msg.setBackgroundColor(Color.WHITE);
-						oa.start();
-					}
+				case MotionEvent.ACTION_DOWN:
 					break;
 			}
 			return false;
+		}
+	}
+	class ItemKeyListener implements View.OnKeyListener{
+		ViewHolder viewHolder;
+		public ItemKeyListener(ViewHolder viewHolder) {
+			this.viewHolder = viewHolder;
+		}
+
+		@Override
+		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			boolean isDpad = false;
+			int index = 0;
+			if(KeyEvent.ACTION_DOWN == event.getAction()){
+				switch (keyCode){
+					case KeyEvent.KEYCODE_DPAD_UP:
+						index = 1;
+						isDpad = true;
+						break;
+					case KeyEvent.KEYCODE_DPAD_DOWN:
+						index = 7;
+						isDpad = true;
+						break;
+					case KeyEvent.KEYCODE_DPAD_LEFT:
+						index = 3;
+						isDpad = true;
+						break;
+					case KeyEvent.KEYCODE_DPAD_RIGHT:
+						index = 5;
+						isDpad = true;
+						break;
+				}
+			}
+			if(isDpad && onItemClickListener != null){
+				startAnimator(viewHolder.tv_msg);
+				onItemClickListener.onItemClick(v, index);
+
+			}
+			return isDpad;
 		}
 	}
 
@@ -131,8 +167,14 @@ public class GameRecyclerViewAdapter extends RecyclerView.Adapter<GameRecyclerVi
 		((Activity) context).getWindowManager().getDefaultDisplay()
 				.getMetrics(dm);
 		ViewGroup.LayoutParams lp = v.getLayoutParams();
-		lp.width = dm.widthPixels/3;
-		lp.height = lp.width;
+		int offset = (int)context.getResources().getDimension(R.dimen.bottom_offset);
+		offset = 0;
+		int w = dm.widthPixels/3 - offset;
+		if(dm.widthPixels > dm.heightPixels){
+			w = dm.heightPixels/3 - offset;
+		}
+		lp.width = w;
+		lp.height = w;
 		v.setLayoutParams(lp);
 		ViewHolder holder = new ViewHolder(v);
 		return holder;
