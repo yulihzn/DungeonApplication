@@ -39,7 +39,6 @@ public class GameRecyclerViewAdapter extends RecyclerView.Adapter<GameRecyclerVi
 		PropertyValuesHolder a1 = PropertyValuesHolder.ofFloat("alpha",0.7f,0f);
 		PropertyValuesHolder a2 = PropertyValuesHolder.ofFloat("scaleX",0.9f,1f);
 		PropertyValuesHolder a3 = PropertyValuesHolder.ofFloat("scaleY",0.9f,1f);
-		PropertyValuesHolder p1 = PropertyValuesHolder.ofFloat("alpha",0.5f,0f);
 		oa = ObjectAnimator.ofPropertyValuesHolder(view,a1,a2,a3);
 		oa.setDuration(500);
 		view.setBackgroundColor(Color.WHITE);
@@ -75,19 +74,20 @@ public class GameRecyclerViewAdapter extends RecyclerView.Adapter<GameRecyclerVi
 		String name = "";
 		int color = Color.WHITE;
 		String msg = "";
-		msg = datas.get(arg1).getMsg();
-		switch (datas.get(arg1).getType()){
-			case 0:
-				name = "";
-				break;
-			case 1:
-				name = datas.get(arg1).getActorModel().getName();
-				color = datas.get(arg1).getActorModel().getColor();
-				break;
-			case 2:
-				name = datas.get(arg1).getItemModel().getName();
-				color = datas.get(arg1).getItemModel().getColor();
-				break;
+		if(datas.size() > 0){
+			switch (datas.get(arg1).getType()){
+				case 0:
+					name = "";
+					break;
+				case 1:
+					name = datas.get(arg1).getActorModel().getName();
+					color = datas.get(arg1).getActorModel().getColor();
+					break;
+				case 2:
+					name = datas.get(arg1).getItemModel().getName();
+					color = datas.get(arg1).getItemModel().getColor();
+					break;
+			}
 		}
 		arg0.tv_actor.setText(name);
 		arg0.tv_actor.setTextColor(color);

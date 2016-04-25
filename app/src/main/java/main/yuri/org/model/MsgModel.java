@@ -1,5 +1,7 @@
 package main.yuri.org.model;
 
+import android.graphics.Color;
+
 /**
  * Created by Administrator on 2016/4/24 0024.
  */
@@ -11,8 +13,17 @@ public class MsgModel {
         this.msg = msg;
     }
 
-    String msg = "";
-    int id = 0;
+    private String msg = "";
+    private int id = 0;
+    private int color = Color.WHITE;
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 
     public String getMsg() {
         return msg;

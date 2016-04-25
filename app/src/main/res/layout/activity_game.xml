@@ -6,49 +6,66 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView_level"
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@android:color/primary_text_dark" />
-        </android.support.v7.widget.Toolbar>
+                android:layout_alignParentTop="true">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcv_test"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/rcv_msg"
-            android:layout_below="@+id/toolbar"
-            android:elevation="8dp"
-            android:layout_gravity="center" />
+                <TextView
+                    android:id="@+id/textView_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@android:color/primary_text_dark" />
+            </android.support.v7.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcv_msg"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_alignParentBottom="true"
-            android:elevation="0dp"
-            android:layout_marginBottom="55dp"
-            android:layout_gravity="center" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcv_test"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:elevation="8dp" />
+
+            <ImageButton
+                android:id="@+id/ib_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/material_grey_800"
+                android:src="@drawable/dash_line" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcv_msg"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="48dp"
+                android:elevation="0dp" />
+
+
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/fl_msg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="match_parent">
 
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="msg"
+                android:visibility="gone"
+                android:id="@+id/textView_msg" />
+        </FrameLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav"
