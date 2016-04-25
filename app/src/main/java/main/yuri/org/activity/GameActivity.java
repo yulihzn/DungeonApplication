@@ -235,7 +235,6 @@ public class GameActivity extends AppCompatActivity {
 	private void addMsg(String msg){
 		adapter_msg.addData(0,new MsgModel(msg));
 		rv_msg.scrollToPosition(0);
-		CustomToast.showToast(getApplicationContext(),msg, Toast.LENGTH_LONG);
 		Snackbar.make(getCurrentFocus(),msg,Snackbar.LENGTH_SHORT).show();
 	}
 
