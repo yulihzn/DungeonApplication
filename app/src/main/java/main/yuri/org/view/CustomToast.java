@@ -69,7 +69,7 @@ public class CustomToast {
 		}
 		mToast.setView(tv);
 		
-		mToast.show();
+//		mToast.show();
 	}
 	private static SpannableStringBuilder getMsg(Context mContext){
 		SpannableStringBuilder builder = new SpannableStringBuilder();
