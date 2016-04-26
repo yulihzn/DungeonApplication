@@ -60,8 +60,8 @@ public class ActorModelFactory {
     public ActorModel getI(){
         ActorModel actorModel = new ActorModel();
         actorModel.setName("I");
-        actorModel.setAttackPoint(10);
-        actorModel.setDefensePoint(10);
+        actorModel.setAttackPoint(1);
+        actorModel.setDefensePoint(0);
         actorModel.setHealthPoint(10);
         actorModel.setMagicPoint(10);
         actorModel.setSpeed(1);
@@ -89,7 +89,7 @@ public class ActorModelFactory {
         actorModel.setHealthPoint(9999);
         actorModel.setMagicPoint(0);
         actorModel.setSpeed(0);
-        actorModel.setColor(Color.LTGRAY);
+        actorModel.setColor(Color.YELLOW);
         return  actorModel;
     }
 

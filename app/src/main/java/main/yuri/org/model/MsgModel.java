@@ -12,6 +12,10 @@ public class MsgModel {
     public MsgModel(String msg) {
         this.msg = msg;
     }
+    public MsgModel(String msg,int color) {
+        this.msg = msg;
+        this.color = color;
+    }
 
     private String msg = "";
     private int id = 0;
@@ -21,8 +25,9 @@ public class MsgModel {
         return color;
     }
 
-    public void setColor(int color) {
+    public MsgModel setColor(int color) {
         this.color = color;
+        return this;
     }
 
     public String getMsg() {

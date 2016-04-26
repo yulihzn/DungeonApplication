@@ -44,6 +44,7 @@ public class MsgRecyclerViewAdapter extends RecyclerView.Adapter<MsgRecyclerView
 
 	@Override
 	public void onBindViewHolder(final ViewHolder arg0, final int arg1) {
+		arg0.tv_msg.setTextColor(list.get(arg1).getColor());
 		arg0.tv_msg.setText(list.get(arg1).getMsg());
 		arg0.itemView.setOnClickListener(new OnClickListener() {
 			@Override

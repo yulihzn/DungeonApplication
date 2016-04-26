@@ -6,6 +6,7 @@ import android.graphics.Color;
  * Created by BanditCat on 2016/4/22.
  */
 public class BaseModel {
+    private int id = 0;//唯一id
     private String name = "";//名字
     private int healthPoint = 0;//血量
     private int magicPoint = 0;//魔量
@@ -14,6 +15,14 @@ public class BaseModel {
     private int speed = 0;//速度
     private String describe = "";//描述
     private int color = Color.WHITE;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getColor() {
         return color;

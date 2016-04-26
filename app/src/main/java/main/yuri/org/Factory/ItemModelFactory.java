@@ -86,19 +86,19 @@ public class ItemModelFactory {
         ItemModel.setMagicPoint(0);
         ItemModel.setSpeed(0);
         ItemModel.setColor(Color.GREEN);
-        int type = random.nextInt(3);
+        int type = random.nextInt(2);
         switch (type){
             case 0:
                 ItemModel.setAttackPoint(1);
                 ItemModel.setName("a");
                 break;
             case 1:
-                ItemModel.setDefensePoint(1);
-                ItemModel.setName("d");
-                break;
-            case 2:
                 ItemModel.setHealthPoint(1);
                 ItemModel.setName("h");
+                break;
+            case 2:
+                ItemModel.setDefensePoint(1);
+                ItemModel.setName("d");
                 break;
         }
         return  ItemModel;
